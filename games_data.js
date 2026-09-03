@@ -112,7 +112,7 @@ const myGames = [
     { title: "Half-Life Deathmatch: Source", rating: "", year: "", platform: "PC (Steam)", hours: "", date: "", image: "https://steamcdn-a.akamaihd.net/steam/apps/360/library_600x900_2x.jpg" },
     { title: "Half-Life 2: Deathmatch", rating: "", year: "", platform: "PC (Steam)", hours: "", date: "", image: "https://steamcdn-a.akamaihd.net/steam/apps/320/library_600x900_2x.jpg" },
     { title: "Half-Life 2", rating: "", year: "", platform: "PC (Steam)", hours: "", date: "", image: "https://steamcdn-a.akamaihd.net/steam/apps/220/library_600x900_2x.jpg" },
-    { title: "Half-Life", rating: "", year: "", platform: "PC (Steam)", hours: "", date: "", image: "https://steamcdn-a.akamaihd.net/steam/apps/70/library_600x900_2x.jpg" }
+    { title: "Half-Life", rating: "", year: "", platform: "PC (Steam)", hours: "", date: "", image: "https://steamcdn-a.akamaihd.net/steam/apps/70/library_600x900_2x.jpg" },
     { title: "Call of Duty®", rating: "", year: "", platform: "PS5 Pro", hours: "0.2 ч.", date: "", image: "https://image.api.playstation.com/vulcan/ap/rnd/202605/2815/e7c940f1c3b9c2725e08b10979926ed6b71482f6f42a65ba.png" },
     { title: "Battlefield™ 6", rating: "", year: "", platform: "PS5 Pro", hours: "0.9 ч.", date: "", image: "https://image.api.playstation.com/vulcan/ap/rnd/202507/2217/7fb7a918a4b9dd1c98de342ec3adfe1421d06627f60397b9.png" },
     { title: "HELLDIVERS™ 2", rating: "", year: "", platform: "PS5 Pro", hours: "0.6 ч.", date: "", image: "https://image.api.playstation.com/vulcan/ap/rnd/202608/0517/6d1f643eec5087e543287e54a123277ec3bcda956d5d5158.png" },
