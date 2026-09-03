@@ -2916,14 +2916,14 @@ const myMovies = [
         rating: "7/10",
         year: "2016",
         date: "23.04.2022",
-        image: "https://upload.wikimedia.org/wikipedia/ru/5/55/Braveheart_imp.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+        image: "https://avatars.mds.yandex.net/get-kinopoisk-image/6201401/1993cde5-370d-4089-869b-05c7e5ed0e53/600x900"
     },
     {
         title: "Убить Билла 2",
         rating: "8/10",
         year: "2004",
         date: "22.04.2022",
-        image: "https://upload.wikimedia.org/wikipedia/ru/c/cf/Kill_bill_vol_one_ver.jpg?utm_source=ru.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled"
+        image: "https://avatars.mds.yandex.net/get-kinopoisk-image/1777765/2f8295c3-cc9f-43cf-8dfe-13616c3eaa5e/600x900"
     },
     {
         title: "Убить Билла",

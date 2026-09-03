@@ -133,47 +133,18 @@
         .tags-container { margin-bottom: 10px; }
         .tag { display: inline-block; background: #333; padding: 4px 8px; border-radius: 6px; font-size: 12px; margin-right: 5px; margin-bottom: 5px; font-weight: 600; }
         
-        /* === АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ И ПЛАНШЕТОВ === */
         @media (max-width: 768px) {
-            header { 
-                flex-direction: column; 
-                padding: 20px 15px; 
-                gap: 15px;
-            }
+            header { flex-direction: column; padding: 20px 15px; gap: 15px; }
             .vanyukha-text { font-size: 28px; }
             .collections-text { font-size: 32px; }
-            nav { 
-                width: 100%; 
-                justify-content: center; 
-                flex-wrap: wrap; 
-                gap: 10px 20px;
-            }
+            nav { width: 100%; justify-content: center; flex-wrap: wrap; gap: 10px 20px; }
             nav a { font-size: 14px; }
-            
             .container { padding: 25px 15px; }
-            
-            .search-wrapper { 
-                flex-direction: column; 
-                gap: 15px; 
-                align-items: stretch;
-            }
-            
-            /* Поиск и фильтр на весь экран */
-            .search-bar, .sort-wrapper, .sort-select { 
-                width: 100%; 
-            }
-            .search-bar:focus-within { 
-                width: 100%; /* Убираем расширение на телефоне, чтобы не ломать верстку */
-            }
-            
+            .search-wrapper { flex-direction: column; gap: 15px; align-items: stretch; }
+            .search-bar, .sort-wrapper, .sort-select { width: 100%; }
+            .search-bar:focus-within { width: 100%; }
             .section-title { font-size: 26px; text-align: center; }
-            
-            /* Делаем сетку плотнее, чтобы на телефоне влезало 2 карточки */
-            .grid { 
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
-                gap: 15px; 
-            }
-            
+            .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
             .info { padding: 12px; }
             .title { font-size: 15px; }
             .rating-star { font-size: 18px; }
@@ -231,12 +202,19 @@
             </div>
         </div>
 
-        <div id="section-movies">
+        <!-- РАЗДЕЛ "ВСЕ" (БЕЗ ЗАГОЛОВКОВ, ЕДИНАЯ СЕТКА) -->
+        <div id="section-all">
+            <div class="grid" id="all-grid"></div>
+        </div>
+
+        <!-- РАЗДЕЛ ТОЛЬКО ФИЛЬМОВ -->
+        <div id="section-movies" style="display: none;">
             <div class="section-title">Фильмы и сериалы</div>
             <div class="grid" id="movies-grid"></div>
         </div>
 
-        <div id="section-games" style="margin-top: 60px;">
+        <!-- РАЗДЕЛ ТОЛЬКО ИГР -->
+        <div id="section-games" style="display: none;">
             <div class="section-title">Игры</div>
             <div class="grid" id="games-grid"></div>
         </div>
@@ -280,13 +258,17 @@
             });
         }
 
-        function renderCards(data, containerId, isGame) {
+        // Обновленная функция рендера - теперь она сама понимает, игра перед ней или фильм
+        function renderCards(data, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = ''; 
             
             if (!data) return; 
 
             data.forEach(item => {
+                // Если у объекта есть платформа или часы - значит это игра
+                const isGame = item.platform !== undefined || item.hours !== undefined;
+
                 let tagsHTML = '<div class="tags-container">';
                 if (item.year) tagsHTML += `<div class="tag">${isGame ? '🕹️' : '🎬'} ${item.year}</div>`;
                 if (item.date) tagsHTML += `<div class="tag">👁️ ${item.date}</div>`;
@@ -327,19 +309,21 @@
         function refreshGrid() {
             const sortType = document.getElementById('sort-select').value;
             
-            if (typeof myMovies !== 'undefined') {
-                const sortedMovies = sortData(myMovies, sortType);
-                renderCards(sortedMovies, 'movies-grid', false);
-            } else {
-                document.getElementById('movies-grid').innerHTML = "<p style='color:red;'>Не удалось загрузить базу фильмов.</p>";
-            }
+            let movies = typeof myMovies !== 'undefined' ? myMovies : [];
+            let games = typeof myGames !== 'undefined' ? myGames : [];
+
+            // 1. РЕНДЕРИМ ЕДИНУЮ БАЗУ "ВСЕ"
+            let allCombined = [...movies, ...games];
+            const sortedAll = sortData(allCombined, sortType);
+            renderCards(sortedAll, 'all-grid');
             
-            if (typeof myGames !== 'undefined') {
-                const sortedGames = sortData(myGames, sortType);
-                renderCards(sortedGames, 'games-grid', true);
-            } else {
-                 document.getElementById('games-grid').innerHTML = "<p style='color:red;'>Не удалось загрузить базу игр (проверь games_data.js).</p>";
-            }
+            // 2. РЕНДЕРИМ ТОЛЬКО ФИЛЬМЫ
+            const sortedMovies = sortData(movies, sortType);
+            renderCards(sortedMovies, 'movies-grid');
+            
+            // 3. РЕНДЕРИМ ТОЛЬКО ИГРЫ
+            const sortedGames = sortData(games, sortType);
+            renderCards(sortedGames, 'games-grid');
 
             applyFilters();
         }
@@ -350,20 +334,22 @@
             document.getElementById('btn-games').classList.remove('active');
             document.getElementById('btn-' + section).classList.add('active');
             
+            const sectionAll = document.getElementById('section-all');
             const sectionMovies = document.getElementById('section-movies');
             const sectionGames = document.getElementById('section-games');
             
             if (section === 'all') {
-                sectionMovies.style.display = 'block';
-                sectionGames.style.display = 'block';
-                sectionGames.style.marginTop = '60px'; 
+                sectionAll.style.display = 'block';
+                sectionMovies.style.display = 'none';
+                sectionGames.style.display = 'none';
             } else if (section === 'movies') {
+                sectionAll.style.display = 'none';
                 sectionMovies.style.display = 'block';
                 sectionGames.style.display = 'none';
             } else if (section === 'games') {
+                sectionAll.style.display = 'none';
                 sectionMovies.style.display = 'none';
                 sectionGames.style.display = 'block';
-                sectionGames.style.marginTop = '0'; 
             }
         }
 
