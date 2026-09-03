@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vанюха COLLECTION'S</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-color: #121212; --card-bg: #1e1e1e; --text-main: #ffffff; --text-muted: #a0a0a0; --accent: #ff4757; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
+        
+        header { padding: 30px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        .site-title { margin: 0; cursor: pointer; display: flex; flex-direction: row; align-items: baseline; }
+        .vanyukha-text { font-weight: 900; font-size: 36px; text-transform: uppercase; letter-spacing: 2px; }
+        .collections-text { 
+            font-family: 'Great Vibes', cursive; 
+            font-size: 42px; 
+            color: #ffffff; 
+            margin-left: 2px; 
+        }
+        
+        .rainbow-text { 
+            background: linear-gradient(45deg, #ff5e5e, #ffb347, #ffde59, #38e54d, #00cbfd, #cb6ce6, #ff66c4); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            display: inline-block;
+        }
+        
+        nav { display: flex; gap: 20px; }
+        nav a { 
+            color: var(--text-muted); 
+            text-decoration: none; 
+            font-weight: 800; 
+            font-size: 16px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            display: inline-block; 
+        }
+        nav a:hover { color: var(--text-main); transform: scale(1.15); }
+        nav a.active { 
+            background: linear-gradient(45deg, #ff5e5e, #ffb347, #ffde59, #38e54d, #00cbfd, #cb6ce6, #ff66c4); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+        
+        .container { padding: 40px 50px; }
+        
+        /* === СТРОКА ПОИСКА И ФИЛЬТРЫ === */
+        .search-wrapper { 
+            margin-bottom: 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 30px;
+            padding: 12px 20px;
+            width: 300px;
+            height: 48px; 
+            transition: all 0.3s ease; 
+        }
+        .search-bar:focus-within {
+            width: 500px; 
+            border-color: #555;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+        }
+        
+        .search-icon { width: 22px; height: 22px; min-width: 22px; }
+        
+        .search-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 16px;
+            width: 100%;
+            margin-left: 12px;
+        }
+        .search-input::placeholder { color: #666; font-weight: 400; }
+        
+        .sort-wrapper {
+            position: relative;
+        }
+        .sort-select {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid #333;
+            border-radius: 30px;
+            padding: 0 45px 0 20px; 
+            height: 48px; 
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            appearance: none; 
+            transition: all 0.2s;
+        }
+        .sort-select:hover {
+            border-color: #555;
+        }
+        .sort-arrow {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+        
+        .section-title { font-weight: 900; font-size: 32px; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 30px; }
+        
+        .card { background-color: var(--card-bg); border-radius: 16px; overflow: hidden; transition: transform 0.3s; cursor: pointer; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-10px); }
+        .poster { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; }
+        .info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
+        .title { font-weight: 800; font-size: 18px; margin: 0 0 10px 0; line-height: 1.2; }
+        .details { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; }
+        
+        .rating-wrapper { margin-top: auto; display: flex; align-items: baseline; }
+        .rating-star { font-size: 22px; margin-right: 5px; }
+        .rating-value { font-weight: 900; font-size: 32px; }
+        .rating-max { color: var(--text-muted); font-weight: 700; font-size: 16px; margin-left: 2px; }
+
+        .tags-container { margin-bottom: 10px; }
+        .tag { display: inline-block; background: #333; padding: 4px 8px; border-radius: 6px; font-size: 12px; margin-right: 5px; margin-bottom: 5px; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="site-title" onclick="showSection('all')">
+            <span class="vanyukha-text rainbow-text">ВАНЮХА</span>
+            <span class="collections-text">collection's</span>
+        </div>
+        <nav>
+            <a id="btn-all" class="active" onclick="showSection('all')">ВСЁ</a>
+            <a id="btn-movies" onclick="showSection('movies')">ФИЛЬМЫ И СЕРИАЛЫ</a>
+            <a id="btn-games" onclick="showSection('games')">ИГРЫ</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        
+        <div class="search-wrapper">
+            <!-- ПОИСК -->
+            <div class="search-bar">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                    <defs>
+                        <linearGradient id="rainbow-svg" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff5e5e" />
+                            <stop offset="20%" stop-color="#ffb347" />
+                            <stop offset="40%" stop-color="#ffde59" />
+                            <stop offset="60%" stop-color="#38e54d" />
+                            <stop offset="80%" stop-color="#00cbfd" />
+                            <stop offset="100%" stop-color="#cb6ce6" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="11" cy="11" r="8" stroke="url(#rainbow-svg)"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="url(#rainbow-svg)"></line>
+                </svg>
+                <input type="text" id="search-input" class="search-input" placeholder="Найти фильм или игру..." autocomplete="off">
+            </div>
+
+            <!-- ФИЛЬТРЫ -->
+            <div class="sort-wrapper">
+                <select id="sort-select" class="sort-select" onchange="refreshGrid()">
+                    <option value="date-desc">Сначала новые (пройденные/просмотренные)</option>
+                    <option value="date-asc">Сначала старые (пройденные/просмотренные)</option>
+                    <option value="rating-desc">Высокий рейтинг (от 10 к 1)</option>
+                    <option value="rating-asc">Низкий рейтинг (от 1 к 10)</option>
+                    <option value="year-desc">Свежие релизы (по году)</option>
+                    <option value="year-asc">Классика (по году)</option>
+                </select>
+                <div class="sort-arrow">▼</div>
+            </div>
+        </div>
+
+        <div id="section-movies">
+            <div class="section-title">Фильмы и сериалы</div>
+            <div class="grid" id="movies-grid"></div>
+        </div>
+
+        <div id="section-games" style="margin-top: 60px;">
+            <div class="section-title">Игры</div>
+            <div class="grid" id="games-grid"></div>
+        </div>
+    </div>
+
+    <!-- ТЕПЕРЬ ОБЕ БАЗЫ ПОДКЛЮЧЕНЫ ЗДЕСЬ -->
+    <script src="movies_data.js"></script>
+    <script src="games_data.js"></script>
+
+    <script>
+        function sortData(data, sortType) {
+            if (!Array.isArray(data)) return [];
+            return [...data].sort((a, b) => {
+                try {
+                    if (sortType.startsWith('rating')) {
+                        let valA = parseFloat(a.rating) || 0;
+                        let valB = parseFloat(b.rating) || 0;
+                        return sortType.endsWith('desc') ? valB - valA : valA - valB;
+                    }
+                    if (sortType.startsWith('year')) {
+                        let valA = parseInt(a.year) || 0;
+                        let valB = parseInt(b.year) || 0;
+                        return sortType.endsWith('desc') ? valB - valA : valA - valB;
+                    }
+                    if (sortType.startsWith('date')) {
+                        let parseDate = (dStr) => {
+                            if (!dStr) return 0;
+                            let parts = String(dStr).split('.');
+                            if (parts.length === 3) {
+                                return new Date(parts[2], parts[1] - 1, parts[0]).getTime();
+                            }
+                            return new Date(dStr).getTime() || 0;
+                        };
+                        let valA = parseDate(a.date);
+                        let valB = parseDate(b.date);
+                        return sortType.endsWith('desc') ? valB - valA : valA - valB;
+                    }
+                } catch(e) {
+                    return 0;
+                }
+                return 0;
+            });
+        }
+
+        function renderCards(data, containerId, isGame) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; 
+            
+            if (!data) return; 
+
+            data.forEach(item => {
+                let tagsHTML = '<div class="tags-container">';
+                if (item.year) tagsHTML += `<div class="tag">${isGame ? '🕹️' : '🎬'} ${item.year}</div>`;
+                if (item.date) tagsHTML += `<div class="tag">👁️ ${item.date}</div>`;
+                
+                if (isGame) {
+                    if (item.platform) tagsHTML += `<div class="tag">🎮 ${item.platform}</div>`;
+                    if (item.hours) tagsHTML += `<div class="tag">⏱ ${item.hours}</div>`;
+                }
+                tagsHTML += '</div>';
+
+                let commentHTML = !isGame && item.comment ? `<div class="details">${item.comment}</div>` : '';
+                
+                let ratingParts = (item.rating || "").split('/');
+                let mainScore = ratingParts[0];
+                let maxScore = ratingParts.length > 1 ? "/" + ratingParts[1] : "";
+
+                // Если оценки нет, прячем звезду и цифры, чтобы не было пустого места
+                let ratingDisplay = mainScore ? `
+                    <div class="rating-wrapper">
+                        <span class="rating-star rainbow-text">★</span>
+                        <span class="rating-value rainbow-text">${mainScore}</span>
+                        <span class="rating-max">${maxScore}</span>
+                    </div>` : '';
+
+                container.innerHTML += `
+                    <div class="card" title="${item.comment || item.title}">
+                        <img src="${item.image}" alt="${item.title}" class="poster">
+                        <div class="info">
+                            <h3 class="title">${item.title}</h3>
+                            ${tagsHTML}
+                            ${commentHTML}
+                            ${ratingDisplay}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function refreshGrid() {
+            const sortType = document.getElementById('sort-select').value;
+            
+            if (typeof myMovies !== 'undefined') {
+                const sortedMovies = sortData(myMovies, sortType);
+                renderCards(sortedMovies, 'movies-grid', false);
+            } else {
+                document.getElementById('movies-grid').innerHTML = "<p style='color:red;'>Не удалось загрузить базу фильмов.</p>";
+            }
+            
+            if (typeof myGames !== 'undefined') {
+                const sortedGames = sortData(myGames, sortType);
+                renderCards(sortedGames, 'games-grid', true);
+            } else {
+                 document.getElementById('games-grid').innerHTML = "<p style='color:red;'>Не удалось загрузить базу игр (проверь games_data.js).</p>";
+            }
+
+            applyFilters();
+        }
+
+        function showSection(section) {
+            document.getElementById('btn-all').classList.remove('active');
+            document.getElementById('btn-movies').classList.remove('active');
+            document.getElementById('btn-games').classList.remove('active');
+            document.getElementById('btn-' + section).classList.add('active');
+            
+            const sectionMovies = document.getElementById('section-movies');
+            const sectionGames = document.getElementById('section-games');
+            
+            if (section === 'all') {
+                sectionMovies.style.display = 'block';
+                sectionGames.style.display = 'block';
+                sectionGames.style.marginTop = '60px'; 
+            } else if (section === 'movies') {
+                sectionMovies.style.display = 'block';
+                sectionGames.style.display = 'none';
+            } else if (section === 'games') {
+                sectionMovies.style.display = 'none';
+                sectionGames.style.display = 'block';
+                sectionGames.style.marginTop = '0'; 
+            }
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            
+            document.querySelectorAll('.card').forEach(card => {
+                const titleEl = card.querySelector('.title');
+                if (titleEl) {
+                    const title = titleEl.textContent.toLowerCase();
+                    if (title.includes(query)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        refreshGrid();
+        
+        document.getElementById('search-input').addEventListener('input', applyFilters);
+
+    </script>
+</body>
+</html>
