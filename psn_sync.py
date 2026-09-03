@@ -6,7 +6,7 @@ import urllib.request
 from psnawp_api import PSNAWP
 
 # ВСТАВЬ СЮДА СВОЙ ТОКЕН:
-NPSSO_TOKEN = "MGN4t7guddAQhQjE0VM5E6vDGTi2ZurRl6n778eYbe9ZqtHqUPilR22IBP4iI4f"
+NPSSO_TOKEN = "MGN4t7guddAQhQjE0VM5E6vDGTi2ZurRl6n778eYbe9ZqtHqUPilR22IBP4iI4fh"
 
 # Настройки для Википедии (запасной план)
 ctx = ssl.create_default_context()
