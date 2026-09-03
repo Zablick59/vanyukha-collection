@@ -10,7 +10,7 @@
         * { box-sizing: border-box; }
         body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
         
-        header { padding: 30px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        header { padding: 30px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; transition: all 0.3s ease; }
         .site-title { margin: 0; cursor: pointer; display: flex; flex-direction: row; align-items: baseline; }
         .vanyukha-text { font-weight: 900; font-size: 36px; text-transform: uppercase; letter-spacing: 2px; }
         .collections-text { 
@@ -44,14 +44,14 @@
             -webkit-text-fill-color: transparent; 
         }
         
-        .container { padding: 40px 50px; }
+        .container { padding: 40px 50px; transition: all 0.3s ease; }
         
-        /* === СТРОКА ПОИСКА И ФИЛЬТРЫ === */
         .search-wrapper { 
             margin-bottom: 40px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center;
+            gap: 20px;
         }
         
         .search-bar {
@@ -104,9 +104,7 @@
             appearance: none; 
             transition: all 0.2s;
         }
-        .sort-select:hover {
-            border-color: #555;
-        }
+        .sort-select:hover { border-color: #555; }
         .sort-arrow {
             position: absolute;
             right: 20px;
@@ -134,6 +132,55 @@
 
         .tags-container { margin-bottom: 10px; }
         .tag { display: inline-block; background: #333; padding: 4px 8px; border-radius: 6px; font-size: 12px; margin-right: 5px; margin-bottom: 5px; font-weight: 600; }
+        
+        /* === АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ И ПЛАНШЕТОВ === */
+        @media (max-width: 768px) {
+            header { 
+                flex-direction: column; 
+                padding: 20px 15px; 
+                gap: 15px;
+            }
+            .vanyukha-text { font-size: 28px; }
+            .collections-text { font-size: 32px; }
+            nav { 
+                width: 100%; 
+                justify-content: center; 
+                flex-wrap: wrap; 
+                gap: 10px 20px;
+            }
+            nav a { font-size: 14px; }
+            
+            .container { padding: 25px 15px; }
+            
+            .search-wrapper { 
+                flex-direction: column; 
+                gap: 15px; 
+                align-items: stretch;
+            }
+            
+            /* Поиск и фильтр на весь экран */
+            .search-bar, .sort-wrapper, .sort-select { 
+                width: 100%; 
+            }
+            .search-bar:focus-within { 
+                width: 100%; /* Убираем расширение на телефоне, чтобы не ломать верстку */
+            }
+            
+            .section-title { font-size: 26px; text-align: center; }
+            
+            /* Делаем сетку плотнее, чтобы на телефоне влезало 2 карточки */
+            .grid { 
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+                gap: 15px; 
+            }
+            
+            .info { padding: 12px; }
+            .title { font-size: 15px; }
+            .rating-star { font-size: 18px; }
+            .rating-value { font-size: 24px; }
+            .rating-max { font-size: 12px; }
+            .tag { font-size: 11px; padding: 3px 6px; }
+        }
     </style>
 </head>
 <body>
@@ -153,7 +200,6 @@
     <div class="container">
         
         <div class="search-wrapper">
-            <!-- ПОИСК -->
             <div class="search-bar">
                 <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
                     <defs>
@@ -172,7 +218,6 @@
                 <input type="text" id="search-input" class="search-input" placeholder="Найти фильм или игру..." autocomplete="off">
             </div>
 
-            <!-- ФИЛЬТРЫ -->
             <div class="sort-wrapper">
                 <select id="sort-select" class="sort-select" onchange="refreshGrid()">
                     <option value="date-desc">Сначала новые (пройденные/просмотренные)</option>
@@ -197,7 +242,6 @@
         </div>
     </div>
 
-    <!-- ТЕПЕРЬ ОБЕ БАЗЫ ПОДКЛЮЧЕНЫ ЗДЕСЬ -->
     <script src="movies_data.js"></script>
     <script src="games_data.js"></script>
 
@@ -259,7 +303,6 @@
                 let mainScore = ratingParts[0];
                 let maxScore = ratingParts.length > 1 ? "/" + ratingParts[1] : "";
 
-                // Если оценки нет, прячем звезду и цифры, чтобы не было пустого места
                 let ratingDisplay = mainScore ? `
                     <div class="rating-wrapper">
                         <span class="rating-star rainbow-text">★</span>
