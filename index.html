@@ -294,7 +294,7 @@
 
                 container.innerHTML += `
                     <div class="card" title="${item.comment || item.title}">
-                        <img src="${item.image}" alt="${item.title}" class="poster">
+                        <img src="${item.image}" alt="${item.title}" class="poster" loading="lazy">
                         <div class="info">
                             <h3 class="title">${item.title}</h3>
                             ${tagsHTML}
