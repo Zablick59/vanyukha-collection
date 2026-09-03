@@ -6,7 +6,7 @@ import urllib.request
 from psnawp_api import PSNAWP
 
 # ВСТАВЬ СЮДА СВОЙ ТОКЕН:
-NPSSO_TOKEN = "MGN4t7guddAQhQjE0VM5E6vDGTi2ZurRl6n778eYbe9ZqtHqUPilR22IBP4iI4fh"
+NPSSO_TOKEN = "MGN4t7guddAQhQjE0VM5E6vDGTi2ZurRl6n778eYbe9ZqtHqUPilR22IBP4iI4f"
 
 # Настройки для Википедии (запасной план)
 ctx = ssl.create_default_context()
@@ -54,7 +54,6 @@ def main():
     for game in stats:
         hours = game.play_duration.total_seconds() / 3600
         if hours > 0:
-            # Скрипт сразу берет официальную картинку игры от Sony
             psn_data[game.name] = {
                 "hours": round(hours, 1),
                 "image": game.image_url if game.image_url else ""
@@ -68,14 +67,12 @@ def main():
         print("❌ Файл games_data.js не найден!")
         return
 
-    # Запоминаем старые игры, чтобы не задваивать
     existing_titles = [t.lower() for t in re.findall(r'title:\s*"([^"]+)"', content)]
 
     lines = content.split('\n')
     updated_count = 0
     new_games_count = 0
 
-    # 1. ОБНОВЛЯЕМ ТОЛЬКО ЧАСЫ У СТАРЫХ ИГР (постеры не трогаем!)
     for i, line in enumerate(lines):
         if 'title: "' in line and 'hours: "' in line:
             title = line.split('title: "')[1].split('"')[0].lower()
@@ -94,12 +91,10 @@ def main():
                                 updated_count += 1
                     break
 
-    # 2. ДОБАВЛЯЕМ НОВЫЕ ИГРЫ С ПОСТЕРАМИ ИЗ PSN
     new_lines = []
     for psn_title, game_info in psn_data.items():
         if not any(psn_title.lower() in et or et in psn_title.lower() for et in existing_titles):
             print(f"✨ Найдена НОВАЯ игра: {psn_title}")
-            
             poster_url = game_info["image"]
             
             if not poster_url:
@@ -108,17 +103,22 @@ def main():
             else:
                 print("   ✅ Получен официальный постер PSN!")
                 
-            new_line = f'    {{ title: "{psn_title}", rating: "", year: "", platform: "PS5 Pro", hours: "{game_info["hours"]} ч.", date: "", image: "{poster_url}" }},'
+            # Безопасно вычищаем двойные кавычки, чтобы не сломать сайт
+            safe_title = psn_title.replace('"', "'")
+            new_line = f'    {{ title: "{safe_title}", rating: "", year: "", platform: "PS5 Pro", hours: "{game_info["hours"]} ч.", date: "", image: "{poster_url}" }},'
             new_lines.append(new_line)
             new_games_count += 1
 
-    # Вставляем новые игры в конец списка перед ];
+    new_content = '\n'.join(lines)
+    
     if new_lines:
-        new_content = '\n'.join(lines)
         insert_block = '\n'.join(new_lines) + '\n'
-        new_content = new_content.replace('];', insert_block + '];')
-    else:
-        new_content = '\n'.join(lines)
+        # Скрипт находит самую последнюю скобку ]; и вставляет новинки СТРОГО перед ней
+        last_bracket_idx = new_content.rfind('];')
+        if last_bracket_idx != -1:
+            new_content = new_content[:last_bracket_idx] + insert_block + new_content[last_bracket_idx:]
+        else:
+            new_content += '\n' + insert_block + '];\n'
 
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(new_content)
