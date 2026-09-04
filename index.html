@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="color-scheme" content="dark"> <!-- ЗАЩИТА ЦВЕТОВ ДЛЯ АНДРОИДА -->
+    <meta name="color-scheme" content="dark">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>ВАНЮХА collection's</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
         
         .card { background-color: var(--card-bg); border-radius: 16px; overflow: hidden; transition: transform 0.3s; cursor: pointer; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-10px); }
-        .poster { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; }
+        .poster { width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; }
         .info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
         .title { font-weight: 800; font-size: 18px; margin: 0 0 10px 0; line-height: 1.2; }
         .details { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; }
@@ -128,7 +128,6 @@
             </div>
         </div>
 
-        <!-- ТЕПЕРЬ СЕТКА ТОЛЬКО ОДНА. ОНА ПЕРЕСТРАИВАЕТСЯ САМА. -->
         <div id="dynamic-title" class="section-title" style="display: none;"></div>
         <div class="grid" id="main-grid"></div>
     </div>
@@ -173,12 +172,18 @@
             });
         }
 
+        // ВОТ ГЛАВНОЕ ИСПРАВЛЕНИЕ:
         function renderCards(data) {
             const container = document.getElementById('main-grid');
-            container.innerHTML = ''; 
-            
-            if (!data) return; 
+            if (!data || data.length === 0) {
+                container.innerHTML = ''; 
+                return;
+            }
 
+            // 1. Создаем пустую текстовую корзину
+            let htmlContent = ''; 
+
+            // 2. Складываем весь код в корзину (не трогая сам сайт)
             data.forEach(item => {
                 const isGame = item.platform !== undefined || item.hours !== undefined;
                 let tagsHTML = '<div class="tags-container">';
@@ -203,7 +208,7 @@
                         <span class="rating-max">${maxScore}</span>
                     </div>` : '';
 
-                container.innerHTML += `
+                htmlContent += `
                     <div class="card" title="${item.comment || item.title}">
                         <img src="${item.image}" alt="${item.title}" class="poster" loading="lazy">
                         <div class="info">
@@ -215,6 +220,9 @@
                     </div>
                 `;
             });
+
+            // 3. Выводим готовую корзину на сайт ровно ОДИН РАЗ
+            container.innerHTML = htmlContent;
         }
 
         function refreshGrid() {
