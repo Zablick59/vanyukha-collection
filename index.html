@@ -116,6 +116,15 @@
                 <input type="text" id="search-input" class="search-input" placeholder="Найти фильм или игру..." autocomplete="off">
             </div>
 
+            <div class="sort-wrapper" id="platform-wrapper" style="display: none;">
+                <select id="platform-select" class="sort-select" onchange="applyFilters()">
+                    <option value="all">Все платформы</option>
+                    <option value="ПК">ПК (Steam)</option>
+                    <option value="PS5">PlayStation 5 Pro</option>
+                </select>
+                <div class="sort-arrow">▼</div>
+            </div>
+
             <div class="sort-wrapper">
                 <select id="sort-select" class="sort-select" onchange="refreshGrid()">
                     <option value="date-desc">Сначала новые (пройденные/просмотренные)</option>
@@ -153,6 +162,15 @@
                         let valB = parseInt(b.year) || 0;
                         return sortType.endsWith('desc') ? valB - valA : valA - valB;
                     }
+                    if (sortType.startsWith('hours')) {
+                        let getHours = (h) => {
+                            if (!h) return 0;
+                            return parseFloat(String(h).replace(/[^0-9.]/g, '')) || 0;
+                        };
+                        let valA = getHours(a.hours);
+                        let valB = getHours(b.hours);
+                        return sortType.endsWith('desc') ? valB - valA : valA - valB;
+                    }
                     if (sortType.startsWith('date')) {
                         let parseDate = (dStr) => {
                             if (!dStr) return 0;
@@ -173,7 +191,6 @@
             });
         }
 
-        // ВОТ ГЛАВНОЕ ИСПРАВЛЕНИЕ:
         function renderCards(data) {
             const container = document.getElementById('main-grid');
             if (!data || data.length === 0) {
@@ -181,10 +198,8 @@
                 return;
             }
 
-            // 1. Создаем пустую текстовую корзину
             let htmlContent = ''; 
 
-            // 2. Складываем весь код в корзину (не трогая сам сайт)
             data.forEach(item => {
                 const isGame = item.platform !== undefined || item.hours !== undefined;
                 let tagsHTML = '<div class="tags-container">';
@@ -222,7 +237,6 @@
                 `;
             });
 
-            // 3. Выводим готовую корзину на сайт ровно ОДИН РАЗ
             container.innerHTML = htmlContent;
         }
 
@@ -256,14 +270,53 @@
             currentSection = section;
             
             const titleEl = document.getElementById('dynamic-title');
+            const sortSelect = document.getElementById('sort-select');
+            const platformWrapper = document.getElementById('platform-wrapper');
+            const platformSelect = document.getElementById('platform-select');
+            const searchInput = document.getElementById('search-input'); // Цепляем строку поиска
+
+            // Меняем заголовки, фильтры и текст в поиске
             if (section === 'all') {
                 titleEl.style.display = 'none';
+                platformWrapper.style.display = 'none';
+                searchInput.placeholder = 'Найти фильм, сериал или игру...'; // <-- Текст для ВСЕ
+                sortSelect.innerHTML = `
+                    <option value="date-desc">Сначала новые (пройденные/просмотренные)</option>
+                    <option value="date-asc">Сначала старые (пройденные/просмотренные)</option>
+                    <option value="rating-desc">Высокий рейтинг (от 10 к 1)</option>
+                    <option value="rating-asc">Низкий рейтинг (от 1 к 10)</option>
+                    <option value="year-desc">Свежие релизы (по году)</option>
+                    <option value="year-asc">Старые релизы (по году)</option>
+                `;
             } else if (section === 'movies') {
                 titleEl.textContent = 'Фильмы и сериалы';
                 titleEl.style.display = 'block';
+                platformWrapper.style.display = 'none';
+                searchInput.placeholder = 'Найти фильм или сериал...'; // <-- Текст для ФИЛЬМОВ
+                sortSelect.innerHTML = `
+                    <option value="date-desc">Сначала новые (просмотренные)</option>
+                    <option value="date-asc">Сначала старые (просмотренные)</option>
+                    <option value="rating-desc">Высокий рейтинг (от 10 к 1)</option>
+                    <option value="rating-asc">Низкий рейтинг (от 1 к 10)</option>
+                    <option value="year-desc">Свежие релизы (по году)</option>
+                    <option value="year-asc">Старые релизы (по году)</option>
+                `;
             } else if (section === 'games') {
                 titleEl.textContent = 'Игры';
                 titleEl.style.display = 'block';
+                platformWrapper.style.display = 'block';
+                platformSelect.value = 'all'; 
+                searchInput.placeholder = 'Найти игру...'; // <-- Текст для ИГР
+                sortSelect.innerHTML = `
+                    <option value="date-desc">Сначала новые (пройденные)</option>
+                    <option value="date-asc">Сначала старые (пройденные)</option>
+                    <option value="hours-desc">Много часов прохождения (от ∞ к 0)</option>
+                    <option value="hours-asc">Мало часов прохождения (от 0 к ∞)</option>
+                    <option value="rating-desc">Высокий рейтинг (от 10 к 1)</option>
+                    <option value="rating-asc">Низкий рейтинг (от 1 к 10)</option>
+                    <option value="year-desc">Свежие релизы (по году)</option>
+                    <option value="year-asc">Старые релизы (по году)</option>
+                `;
             }
             
             refreshGrid();
@@ -271,15 +324,30 @@
 
         function applyFilters() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const platformDropdown = document.getElementById('platform-select');
+            const platform = platformDropdown ? platformDropdown.value : 'all';
+
             document.querySelectorAll('.card').forEach(card => {
                 const titleEl = card.querySelector('.title');
                 if (titleEl) {
                     const title = titleEl.textContent.toLowerCase();
-                    card.style.display = title.includes(query) ? 'flex' : 'none';
+                    const matchesSearch = title.includes(query);
+                    
+                    let matchesPlatform = true;
+
+                    if (currentSection === 'games' && platform !== 'all') {
+                        const cardText = card.textContent;
+                        if (platform === 'ПК') {
+                            matchesPlatform = cardText.includes('ПК') || cardText.includes('Steam');
+                        } else if (platform === 'PS5') {
+                            matchesPlatform = cardText.includes('PS5');
+                        }
+                    }
+
+                    card.style.display = (matchesSearch && matchesPlatform) ? 'flex' : 'none';
                 }
             });
         }
-
         refreshGrid();
         document.getElementById('search-input').addEventListener('input', applyFilters);
 
