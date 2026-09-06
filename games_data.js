@@ -90,5 +90,4 @@ const myGames = [
     { title: "Returnal", rating: "", year: "", platform: "PS5 Pro", hours: "0.7 ч.", date: "17.11.2025", image: "https://image.api.playstation.com/vulcan/ap/rnd/202011/0415/fkyAEGMueFssDbC4XQpITu6q.png" },
     { title: "Watch Dogs: Legion", rating: "", year: "", platform: "PS5 Pro", hours: "0.4 ч.", date: "16.11.2025", image: "https://image.api.playstation.com/vulcan/ap/rnd/202007/0200/ohDfr1TcylLqbwva38ONyLHO.png" },
     { title: "Red Dead Redemption", rating: "", year: "2010", platform: "PS5 Pro", hours: "0.3 ч.", date: "02.12.2025", image: "https://image.api.playstation.com/vulcan/ap/rnd/202307/3122/00bd08cf240ede27e4354d3fc7a5b867190df853940366ec.png" },
-    { title: "Grand Theft Auto V (PlayStation5)", rating: "", year: "", platform: "PS5 Pro", hours: "5.9 ч.", date: "10.08.2026", image: "https://image.api.playstation.com/vulcan/ap/rnd/202202/2816/K6mmm89oNII1iI1aqaClO0wh.png" },
 ];
