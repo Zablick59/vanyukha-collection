@@ -21,7 +21,7 @@ const myGames = [
     { title: "Ghost of Tsushima", rating: "", year: "", platform: "PS5 Pro", hours: "39.5 ч.", date: "19.03.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/2215430/library_600x900_2x.jpg" },
     { title: "Horizon Forbidden West", rating: "", year: "", platform: "PS5 Pro", hours: "36.2 ч.", date: "19.03.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/2420110/library_600x900_2x.jpg" },
     { title: "Resident Evil 4", rating: "", year: "", platform: "PS5 Pro", hours: "13.8 ч.", date: "06.03.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/2050650/library_600x900_2x.jpg" },
-    { title: "Marvel's Spider-Man: Miles Morales", rating: "", year: "", platform: "PS5 Pro", hours: "5.9 ч.", date: "19.02.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/1817190/library_600x900_2x.jpg" },
+    { title: "Marvel's Spider-Man: Miles Morales", rating: "", year: "", platform: "PS5 Pro", hours: "5.9 ч.", date: "11.02.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/1817190/library_600x900_2x.jpg" },
     { title: "Marvel's Spider-Man Remastered", rating: "", year: "", platform: "PS5 Pro", hours: "19.0 ч.", date: "11.02.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/1817070/library_600x900_2x.jpg" },
     { title: "Assassin's Creed Mirage", rating: "", year: "", platform: "PS5 Pro", hours: "1.0 ч.", date: "21.01.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/3035570/library_600x900_2x.jpg" },
     { title: "Dying Light 2: Stay Human", rating: "", year: "", platform: "PS5 Pro", hours: "6.7 ч.", date: "19.01.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/534380/library_600x900_2x.jpg" },
