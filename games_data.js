@@ -9,7 +9,7 @@ const myGames = [
     { title: "Far Cry 6", rating: "", year: "", platform: "PC (Steam) + PS5 Pro", hours: "8.2 ч.", date: "25.11.2025", image: "https://steamcdn-a.akamaihd.net/steam/apps/2369390/library_600x900_2x.jpg" },
 
     // === НОВЫЕ ИГРЫ ТОЛЬКО С PS5 PRO ===
-    { title: "S.T.A.L.K.E.R. 2: Heart of Chornobyl", rating: "", year: "", platform: "PS5 Pro", hours: "9.9 ч.", date: "01.09.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/1643320/library_600x900_2x.jpg" },
+    { title: "S.T.A.L.K.E.R. 2: Heart of Chornobyl", rating: "", year: "", platform: "PS5 Pro", hours: "10.7 ч.", date: "07.09.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/1643320/library_600x900_2x.jpg" },
     { title: "Marvel's Spider-Man 2", rating: "", year: "", platform: "PS5 Pro", hours: "16.6 ч.", date: "30.07.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/2651280/library_600x900_2x.jpg" },
     { title: "Call of Duty Modern Warfare III", rating: "", year: "", platform: "PS5 Pro", hours: "6.2 ч.", date: "28.07.2026", image: "https://store-images.s-microsoft.com/image/apps.55183.13612848337674936.f9e71e15-6765-4282-8a3d-968dccfb729c.f59acc22-2c7b-41fb-96ca-d173dc290712" },
     { title: "Avatar: Frontiers of Pandora", rating: "", year: "", platform: "PS5 Pro", hours: "5.1 ч.", date: "27.07.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/2840770/library_600x900_2x.jpg" },
