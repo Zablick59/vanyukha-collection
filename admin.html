@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .admin-container {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h2 { margin-top: 0; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #aaa; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff5e5e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #ff4444; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <h2>Добавить в коллекцию</h2>
+        
+        <div class="form-group">
+            <label>Категория</label>
+            <select id="category" onchange="toggleFields()">
+                <option value="movies">Фильм / Сериал</option>
+                <option value="games">Игра (вручную)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Название</label>
+            <input type="text" id="title" placeholder="Например: Интерстеллар">
+        </div>
+
+        <div class="form-group">
+            <label>Год выхода</label>
+            <input type="number" id="year" placeholder="2014">
+        </div>
+
+        <div class="form-group">
+            <label>Оценка (можно с точкой: 8.5)</label>
+            <input type="text" id="rating" placeholder="9.0">
+        </div>
+
+        <div class="form-group">
+            <label>Ссылка на постер (URL-адрес картинки)</label>
+            <input type="text" id="image" placeholder="https://...">
+        </div>
+
+        <!-- Поля только для игр -->
+        <div id="game-fields" class="hidden">
+            <div class="form-group">
+                <label>Платформа</label>
+                <input type="text" id="platform" placeholder="Например: ПК (Steam)">
+            </div>
+            <div class="form-group">
+                <label>Часы (просто число)</label>
+                <input type="number" id="hours" placeholder="45">
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top: 30px;">
+            <label>Секретный токен GitHub (Пароль)</label>
+            <input type="password" id="token" placeholder="ghp_...">
+        </div>
+
+        <button onclick="saveData()">Сохранить на сайт</button>
+    </div>
+
+    <script>
+        function toggleFields() {
+            const category = document.getElementById('category').value;
+            const gameFields = document.getElementById('game-fields');
+            if (category === 'games') {
+                gameFields.classList.remove('hidden');
+            } else {
+                gameFields.classList.add('hidden');
+            }
+        }
+        
+        function saveData() {
+            alert("Пока что кнопка просто для красоты. Привяжем логику на следующем шаге!");
+        }
+    </script>
+</body>
+</html>

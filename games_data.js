@@ -9,7 +9,7 @@ const myGames = [
     { title: "Far Cry 6", rating: "", year: "", platform: "PC (Steam) + PS5 Pro", hours: "8.2 ч.", date: "25.11.2025", image: "https://steamcdn-a.akamaihd.net/steam/apps/2369390/library_600x900_2x.jpg" },
 
     // === НОВЫЕ ИГРЫ ТОЛЬКО С PS5 PRO ===
-    { title: "S.T.A.L.K.E.R. 2: Heart of Chornobyl", rating: "", year: "", platform: "PS5 Pro", hours: "10.7 ч.", date: "07.09.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/1643320/library_600x900_2x.jpg" },
+    { title: "S.T.A.L.K.E.R. 2: Heart of Chornobyl", rating: "", year: "", platform: "PS5 Pro", hours: "14.6 ч.", date: "19.09.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/1643320/library_600x900_2x.jpg" },
     { title: "Marvel's Spider-Man 2", rating: "", year: "", platform: "PS5 Pro", hours: "16.6 ч.", date: "30.07.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/2651280/library_600x900_2x.jpg" },
     { title: "Call of Duty Modern Warfare III", rating: "", year: "", platform: "PS5 Pro", hours: "6.2 ч.", date: "28.07.2026", image: "https://store-images.s-microsoft.com/image/apps.55183.13612848337674936.f9e71e15-6765-4282-8a3d-968dccfb729c.f59acc22-2c7b-41fb-96ca-d173dc290712" },
     { title: "Avatar: Frontiers of Pandora", rating: "", year: "", platform: "PS5 Pro", hours: "5.1 ч.", date: "27.07.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/2840770/library_600x900_2x.jpg" },
@@ -30,7 +30,7 @@ const myGames = [
     { title: "Uncharted: Legacy of Thieves Collection", rating: "", year: "", platform: "PS5 Pro", hours: "2.7 ч.", date: "22.11.2025", image: "https://steamcdn-a.akamaihd.net/steam/apps/1659420/library_600x900_2x.jpg" },
     { title: "Battlefield 6", rating: "", year: "", platform: "PS5 Pro", hours: "1.0 ч.", date: "22.08.2026", image: "https://blackheartprints.com/cdn/shop/files/Battlefield6GamePosterWeb_1200x1200.jpg?v=1755121492" },
     { title: "Ratchet & Clank: Rift Apart", rating: "", year: "", platform: "PS5 Pro", hours: "7.6 ч.", date: "09.08.2026", image: "https://steamcdn-a.akamaihd.net/steam/apps/1895880/library_600x900_2x.jpg" },
-    { title: "Resident Evil Requiem", rating: "", year: "", platform: "PS5 Pro", hours: "6.6 ч.", date: "09.08.2026", image: "https://upload.wikimedia.org/wikipedia/ru/c/c1/Resident_Evil_Requiem.jpg?utm_source=ru.wikipedia.org&utm_campaign=index&utm_content=original" },
+    { title: "Resident Evil Requiem", rating: "", year: "", platform: "PS5 Pro", hours: "7.0 ч.", date: "13.09.2026", image: "https://upload.wikimedia.org/wikipedia/ru/c/c1/Resident_Evil_Requiem.jpg?utm_source=ru.wikipedia.org&utm_campaign=index&utm_content=original" },
 
     // === ОСТАЛЬНЫЕ ИГРЫ ТОЛЬКО ИЗ STEAM ===
     { title: "Tom Clancy's Rainbow Six Siege", rating: "", year: "", platform: "PC (Steam)", hours: "692.7 ч.", date: "", image: "https://steamcdn-a.akamaihd.net/steam/apps/359550/library_600x900_2x.jpg" },
@@ -90,4 +90,5 @@ const myGames = [
     { title: "Returnal", rating: "", year: "", platform: "PS5 Pro", hours: "0.7 ч.", date: "17.11.2025", image: "https://image.api.playstation.com/vulcan/ap/rnd/202011/0415/fkyAEGMueFssDbC4XQpITu6q.png" },
     { title: "Watch Dogs: Legion", rating: "", year: "", platform: "PS5 Pro", hours: "0.4 ч.", date: "16.11.2025", image: "https://image.api.playstation.com/vulcan/ap/rnd/202007/0200/ohDfr1TcylLqbwva38ONyLHO.png" },
     { title: "Red Dead Redemption", rating: "", year: "2010", platform: "PS5 Pro", hours: "0.3 ч.", date: "02.12.2025", image: "https://image.api.playstation.com/vulcan/ap/rnd/202307/3122/00bd08cf240ede27e4354d3fc7a5b867190df853940366ec.png" },
+    { title: "Sniper Elite: Resistance", rating: "", year: "2025", platform: "PS5 Pro", hours: "0.5 ч.", date: "14.09.2026", image: "https://image.api.playstation.com/vulcan/ap/rnd/202408/1309/05d041f5216b1cd55a4587729534ce8ac8c557877b4d1483.png" },
 ];

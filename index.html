@@ -153,8 +153,13 @@
             return [...data].sort((a, b) => {
                 try {
                     if (sortType.startsWith('rating')) {
-                        let valA = parseFloat(a.rating) || 0;
-                        let valB = parseFloat(b.rating) || 0;
+                        let getRating = (r) => {
+                            if (!r) return 0;
+                            // Меняем запятую на точку, если ввел 7,5, и превращаем в дробное число
+                            return parseFloat(String(r).replace(',', '.')) || 0; 
+                        };
+                        let valA = getRating(a.rating);
+                        let valB = getRating(b.rating);
                         return sortType.endsWith('desc') ? valB - valA : valA - valB;
                     }
                     if (sortType.startsWith('year')) {
