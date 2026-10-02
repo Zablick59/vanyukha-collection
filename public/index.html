@@ -10,10 +10,19 @@
 <header><a class="site-title" href="/" aria-label="Вся коллекция"><span class="vanyukha-text rainbow-text">ВАНЮХА</span><span class="collections-text">collection's</span></a>
 <nav aria-label="Категории"><button data-section="all" class="active">ВСЁ</button><button data-section="movies">ФИЛЬМЫ И СЕРИАЛЫ</button><button data-section="games">ИГРЫ</button><button data-section="wishlist">ХОЧУ ПОСМОТРЕТЬ / ПОИГРАТЬ</button></nav></header>
 <main class="container">
-<div class="collection-heading"><div><p class="eyebrow">ЛИЧНАЯ КОЛЛЕКЦИЯ</p><h1 id="section-title">Посмотрел. Поиграл. Оценил.</h1></div><p id="summary" class="muted"></p></div>
+<div class="collection-heading"><div><p class="eyebrow">ЛИЧНАЯ КОЛЛЕКЦИЯ</p><h1 id="section-title">Всё</h1></div><p id="summary" class="muted"></p></div>
 <div class="search-wrapper"><div class="search-bar"><span class="rainbow-text search-symbol" aria-hidden="true">⌕</span><input id="search-input" class="search-input" type="search" placeholder="Найти фильм, сериал или игру…" aria-label="Поиск по названию"></div>
 <div class="sort-wrapper" id="platform-wrapper" hidden><select id="platform-select" class="sort-select" aria-label="Платформа"><option value="all">Все платформы</option><option value="PC">ПК / Steam</option><option value="PS">PlayStation</option></select></div>
 <div class="sort-wrapper"><select id="sort-select" class="sort-select" aria-label="Сортировка"><option value="date-desc">Сначала новые в коллекции</option><option value="date-asc">Сначала старые в коллекции</option><option value="rating-desc">По оценке: от высокой</option><option value="rating-asc">По оценке: от низкой</option><option value="year-desc">По году: новые</option><option value="year-asc">По году: старые</option><option value="hours-desc">По часам игры</option></select></div></div>
 <p id="notice" role="status">Загружаю коллекцию…</p><div class="grid" id="main-grid"></div>
 </main><footer><span>ВАНЮХА collection's · фильмы, сериалы, игры</span><a href="/admin">Вход владельца</a></footer>
+<dialog id="item-dialog" class="item-dialog" aria-labelledby="item-dialog-title">
+<div class="dialog-heading"><h2 id="item-dialog-title"></h2><button id="close-item-dialog" class="dialog-close" type="button" aria-label="Закрыть карточку">×</button></div>
+<div class="dialog-tabs" role="tablist" aria-label="Содержимое карточки">
+<button id="overview-tab" type="button" role="tab" aria-controls="overview-panel" aria-selected="true">Карточка</button>
+<button id="review-tab" type="button" role="tab" aria-controls="review-panel" aria-selected="false" tabindex="-1" hidden>Рецензия</button>
+</div>
+<section id="overview-panel" class="dialog-panel" role="tabpanel" aria-labelledby="overview-tab" tabindex="0"></section>
+<section id="review-panel" class="dialog-panel review-text" role="tabpanel" aria-labelledby="review-tab" tabindex="0" hidden></section>
+</dialog>
 </body></html>

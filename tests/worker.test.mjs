@@ -26,3 +26,17 @@ test('PSN job lock, exact editions, hours deltas, idempotence and weekly complet
 test('PSN preserves newer dates, handles reset, and updates actual current owner rating',async()=>{const f=await fixture();const g={id:'g1',title:'Cyberpunk 2077',category:'games',status:'completed',rating:'10/10',platform:'PC',hours:'100 ч.',date:'01.10.2026',image:''};await f.env.DB.prepare('INSERT INTO items VALUES (?,?,1)').bind(g.id,JSON.stringify(g)).run();await f.env.DB.prepare('INSERT INTO psn_baseline VALUES (?,?)').bind(g.title,10).run();const auth={Authorization:'Bearer '+f.env.PSN_SYNC_SECRET};await f.call('/api/internal/psn','POST',{state:'started'},auth);const r=await f.call('/api/internal/psn','POST',{stats:[{title:g.title,hours:8,date:'01.09.2026',image:''}]},auth);assert.equal(r.status,200,JSON.stringify(r.json));const result=(await f.call('/api/collection')).json.items[0];assert.equal(result.hours,'100 ч.');assert.equal(result.date,g.date);assert.equal(result.rating,'10/10');});
 test('PSN Free plan batch stays below 50 D1 queries',async()=>{const f=await fixture();const auth={Authorization:'Bearer '+f.env.PSN_SYNC_SECRET};await f.call('/api/internal/psn','POST',{state:'started'},auth);f.env.DB.count=0;const stats=Array.from({length:10},(_,n)=>({title:'A unique test game '+n,hours:1,date:'01.10.2026',image:''}));const r=await f.call('/api/internal/psn','POST',{stats},auth);assert.equal(r.status,200,JSON.stringify(r.json));assert.ok(f.env.DB.count<50,'Queries: '+f.env.DB.count);assert.equal((await f.call('/api/collection')).json.items.length,10);});
 test('malformed sync cannot change collection',async()=>{const f=await fixture();const auth={Authorization:'Bearer '+f.env.PSN_SYNC_SECRET};await f.call('/api/internal/psn','POST',{state:'started'},auth);assert.equal((await f.call('/api/internal/psn','POST',{stats:[{title:'x',hours:-10,date:'',image:''}]},auth)).status,400);assert.equal((await f.call('/api/collection')).json.items.length,0);});
+
+test('review and comment persist separately, editing does not change insertion order',async()=>{
+ const f=await fixture();await f.login();
+ const first=await f.call('/api/items','POST',{...item,date:'01.01.2099',comment:'Короткий комментарий',review:'Первая часть рецензии.\n\n<script>literal text</script>'});
+ assert.equal(first.status,201);assert.equal(first.json.item.comment,'Короткий комментарий');assert.match(first.json.item.review,/literal text/);
+ const second=await f.call('/api/items','POST',{...item,title:'Добавлен позже',date:'01.01.2000'});
+ assert.equal(second.status,201);assert.equal(second.json.item.review,'');
+ const edited=await f.call('/api/items/'+first.json.item.id,'PUT',{...first.json.item,review:'Новая рецензия'});
+ assert.equal(edited.status,200);assert.equal(edited.json.item.review,'Новая рецензия');assert.equal(edited.json.item.comment,'Короткий комментарий');
+ const rows=(await f.call('/api/collection')).json.items;
+ assert.deepEqual(rows.map(i=>i.id),[first.json.item.id,second.json.item.id]);
+ assert.equal(rows[0].review,'Новая рецензия');
+ assert.throws(()=>validate({...item,review:'x'.repeat(30001)}));
+});

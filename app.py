@@ -154,7 +154,7 @@ def text(value, limit):
 
 def validate(payload):
     if not isinstance(payload,dict): abort(400)
-    result = {k:text(payload.get(k,''),n) for k,n in [('title',200),('year',4),('date',10),('comment',2000),('platform',100),('image',2000)]}
+    result = {k:text(payload.get(k,''),n) for k,n in [('title',200),('year',4),('date',10),('comment',2000),('review',30000),('platform',100),('image',2000)]}
     if not result['title']: abort(400)
     if result['year'] and (not result['year'].isdigit() or not 1800 <= int(result['year']) <= 2200): abort(400)
     if result['date']:
