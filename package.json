@@ -1,0 +1,14 @@
+{
+  "name": "vanyukha-collection",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs && wrangler dev --port 8787",
+    "deploy": "node scripts/build.mjs && wrangler deploy",
+    "test": "node --test tests/worker.test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark">
+<title>ВАНЮХА collection's</title><link rel="icon" href="/assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Great+Vibes&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css"><script defer src="/assets/collection.js"></script>
+</head>
+<body>
+<header><a class="site-title" href="/" aria-label="Вся коллекция"><span class="vanyukha-text rainbow-text">ВАНЮХА</span><span class="collections-text">collection's</span></a>
+<nav aria-label="Категории"><button data-section="all" class="active">ВСЁ</button><button data-section="movies">ФИЛЬМЫ И СЕРИАЛЫ</button><button data-section="games">ИГРЫ</button><button data-section="wishlist">ХОЧУ ПОСМОТРЕТЬ / ПОИГРАТЬ</button></nav></header>
+<main class="container">
+<div class="collection-heading"><div><p class="eyebrow">ЛИЧНАЯ КОЛЛЕКЦИЯ</p><h1 id="section-title">Посмотрел. Поиграл. Оценил.</h1></div><p id="summary" class="muted"></p></div>
+<div class="search-wrapper"><div class="search-bar"><span class="rainbow-text search-symbol" aria-hidden="true">⌕</span><input id="search-input" class="search-input" type="search" placeholder="Найти фильм, сериал или игру…" aria-label="Поиск по названию"></div>
+<div class="sort-wrapper" id="platform-wrapper" hidden><select id="platform-select" class="sort-select" aria-label="Платформа"><option value="all">Все платформы</option><option value="PC">ПК / Steam</option><option value="PS">PlayStation</option></select></div>
+<div class="sort-wrapper"><select id="sort-select" class="sort-select" aria-label="Сортировка"><option value="date-desc">Сначала новые в коллекции</option><option value="date-asc">Сначала старые в коллекции</option><option value="rating-desc">По оценке: от высокой</option><option value="rating-asc">По оценке: от низкой</option><option value="year-desc">По году: новые</option><option value="year-asc">По году: старые</option><option value="hours-desc">По часам игры</option></select></div></div>
+<p id="notice" role="status">Загружаю коллекцию…</p><div class="grid" id="main-grid"></div>
+</main><footer><span>ВАНЮХА collection's · фильмы, сериалы, игры</span><a href="/admin">Вход владельца</a></footer>
+</body></html>

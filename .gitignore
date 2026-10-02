@@ -1,3 +1,36 @@
-psn_sync.py
-# Системные настройки
+# Credentials and all local settings
+.env
+.env.*
+!.env.example
+.local/
+private/
+secrets/
+*credentials*
+*.pem
+*.key
+# Runtime data, uploads and backups (never serve the project root)
+*.sqlite3
+*.sqlite3-*
+*.db
+psn_cache.json
+kinopoisk_export*.csv
+backups/
+# Dependencies, caches and OS/editor files
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
 .DS_Store
+._*
+*.log
+.vscode/
+.idea/
+# Cloudflare secrets and generated build output
+.dev.vars
+.dev.vars.*
+.wrangler/
+dist/
+mobile-preview.jpg
+admin-preview.jpg
