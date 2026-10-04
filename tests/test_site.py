@@ -3,6 +3,7 @@ import json
 import os
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -72,6 +73,17 @@ class WebsiteTests(unittest.TestCase):
     def test_login_rate_limit(self):
         for i in range(10): self.assertEqual(self.client.post('/api/login',json={'password':'wrong'},headers=self.origin).status_code,401)
         self.assertEqual(self.client.post('/api/login',json={'password':'wrong'},headers=self.origin).status_code,429)
+
+    def test_remembered_login_reopens_and_refreshes_expiry(self):
+        self.login()
+        cookie=self.client.get_cookie('vanyukha_owner')
+        self.assertGreater(cookie.expires.timestamp()-time.time(),89*86400)
+        reopened=app.app.test_client()
+        reopened.set_cookie('vanyukha_owner',cookie.value)
+        response=reopened.get('/api/session')
+        self.assertEqual(response.status_code,200)
+        self.assertIn('Expires=',response.headers['Set-Cookie'])
+        self.assertGreater(reopened.get_cookie('vanyukha_owner').expires.timestamp()-time.time(),89*86400)
 
     def test_real_image_upload_and_reject_html(self):
         h=self.login();stream=io.BytesIO();Image.new('RGB',(40,60),'red').save(stream,'PNG');stream.seek(0)

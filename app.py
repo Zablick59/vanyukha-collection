@@ -36,7 +36,7 @@ app = Flask(__name__, static_folder=None)
 app.config.update(SECRET_KEY=SECRET, MAX_CONTENT_LENGTH=8 * 1024 * 1024,
     SESSION_COOKIE_NAME='vanyukha_owner', SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SECURE=not LOCAL, SESSION_COOKIE_SAMESITE='Strict',
-    PERMANENT_SESSION_LIFETIME=timedelta(hours=12))
+    PERMANENT_SESSION_LIFETIME=timedelta(days=90))
 storage.initialize()
 
 

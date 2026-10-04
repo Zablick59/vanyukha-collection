@@ -4,8 +4,8 @@
         body { font-family: 'Montserrat', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 0; }
 
         header { padding: 30px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; transition: all 0.3s ease; }
-        .site-title { margin: 0; cursor: pointer; display: flex; flex-direction: row; align-items: baseline; }
-        .vanyukha-text { font-weight: 900; font-size: 36px; text-transform: uppercase; letter-spacing: 2px; }
+        .site-title { margin: 0; cursor: pointer; display: flex; flex-direction: row; align-items: baseline; white-space: nowrap; flex-shrink: 0; }
+        .vanyukha-text { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 36px; text-transform: uppercase; letter-spacing: 2px; }
         .collections-text { font-family: 'Great Vibes', cursive; font-size: 42px; color: #ffffff; margin-left: 2px; }
 
         .rainbow-text {
