@@ -2,6 +2,8 @@ body {font-family:system-ui,-apple-system,sans-serif;}header a {text-decoration:
 
 .review-editor{margin-top:16px;border-top:1px solid #333;padding-top:8px;}.review-editor textarea{line-height:1.6;}
 .login-note{font-size:13px;line-height:1.6;margin-bottom:0;}
+select{appearance:none;-webkit-appearance:none;padding-right:48px;background-image:url('/assets/select-chevron.svg');background-repeat:no-repeat;background-position:right 16px center;background-size:18px 18px;}
+.owner-heading{margin:0;letter-spacing:2px;}
 header{padding-top:calc(30px + env(safe-area-inset-top));padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right));}
 .admin-page{padding-bottom:calc(64px + env(safe-area-inset-bottom));padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right));}
 @media(max-width:760px){header{padding-top:calc(20px + env(safe-area-inset-top));padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));}.admin-page{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));}}
