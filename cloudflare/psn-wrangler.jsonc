@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "vanyukha-psn",
+  "main": "psn-worker.js",
+  "account_id": "cce9e5721f5070a3935d35ebc3795181",
+  "compatibility_date": "2026-10-01",
+  "services": [{ "binding": "COLLECTION", "service": "vanyukha-collection" }],
+  "triggers": { "crons": ["17 3 * * *"] },
+  "observability": { "enabled": false }
+}

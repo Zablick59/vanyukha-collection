@@ -3,6 +3,7 @@
   "name": "vanyukha-collection",
   "main": "cloudflare/worker.js",
   "compatibility_date": "2026-10-01",
+  "services": [{ "binding": "PSN_RUNNER", "service": "vanyukha-psn" }],
   "assets": {
     "directory": "./dist",
     "html_handling": "none",

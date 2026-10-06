@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {DatabaseSync} from 'node:sqlite';
 import worker from '../cloudflare/worker.js';
+import psnWorker from '../cloudflare/psn-worker.js';
+import {fetchStats,titleStat} from '../cloudflare/psn.js';
 import {passwordHash,encrypt,decrypt,sha} from '../cloudflare/security.js';
 import {normalized,validate,planStats} from '../cloudflare/validation.js';
 
@@ -15,6 +17,27 @@ const password='a-strong-test-password-2026';
 const hash=await passwordHash(password);
 async function fixture(){const DB=new D1();const env={DB,APP_SECRET:'test-secret-'+('a'.repeat(64)),OWNER_PASSWORD_HASH:hash,PSN_SYNC_SECRET:'runner-private-secret',ASSETS:{fetch:async request=>new Response('asset:'+new URL(request.url).pathname)}};let cookie='',csrf='';return {env,async call(path,method='GET',data,extra={}){const headers={...extra};if(cookie)headers.Cookie=cookie;if(method!=='GET'){headers.Origin='https://test.example';if(csrf)headers['X-CSRF-Token']=csrf;headers['Content-Type']='application/json';}const response=await worker.fetch(new Request('https://test.example'+path,{method,headers,body:data===undefined?undefined:JSON.stringify(data)}),env);const set=response.headers.get('Set-Cookie');if(set)cookie=set.split(';')[0];let json;try{json=await response.clone().json();}catch{}if(path==='/api/login'&&response.ok)csrf=json.csrf;return {status:response.status,json,response};},async login(){const r=await this.call('/api/login','POST',{password});assert.equal(r.status,200);return r;}};}
 const item={title:'Интерстеллар',category:'movies',rating:'8,5',year:'2014',date:'01.10.2026',image:'https://example.com/poster.jpg',status:'completed',comment:'Хороший фильм'};
+
+function sonyMock({expire=false,brokenPage=false,count=21}={}){
+ const calls=[];
+ const fetcher=async(input,options)=>{
+  const url=new URL(input);calls.push({url,options});assert.equal(options.redirect,'manual');
+  if(url.pathname.endsWith('/authorize')){assert.equal(url.hostname,'ca.account.sony.com');assert.equal(options.headers.Cookie,'npsso='+'n'.repeat(64));return new Response(null,{status:302,headers:{Location:expire?'com.scee.psxandroid.scecompcall://redirect?error=invalid_grant':'com.scee.psxandroid.scecompcall://redirect?code=test-code'}});}
+  assert.equal(options.headers.Cookie,undefined);
+  if(url.pathname.endsWith('/token')){assert.equal(options.method,'POST');assert.equal(options.body.get('code'),'test-code');return Response.json({access_token:'temporary-access-token'});}
+  assert.equal(url.hostname,'m.np.playstation.com');assert.equal(options.headers.Authorization,'Bearer temporary-access-token');
+  const offset=Number(url.searchParams.get('offset'));
+  if(offset&&brokenPage)return new Response('private upstream body',{status:503});
+  return Response.json({titles:Array.from({length:offset?count-1:1},(_,n)=>({name:'Native game '+(offset+n),playDuration:'PT2H30M',lastPlayedDateTime:'2026-10-06T01:00:00Z',imageUrl:'https://example.com/game.jpg'})),nextOffset:offset?0:1});
+ };
+ return {calls,fetcher};
+}
+function nativeBindings(f){
+ f.env.PSN_NPSSO='n'.repeat(64);const queries=[];
+ f.env.COLLECTION={fetch:async(url,options)=>{const before=f.env.DB.count;const result=await worker.fetch(new Request(url,options),f.env);queries.push(f.env.DB.count-before);return result;}};
+ f.env.PSN_RUNNER={fetch:(url,options)=>psnWorker.fetch(new Request(url,options),f.env)};
+ return queries;
+}
 
 test('public collection, private routes, and protected static mapping',async()=>{const f=await fixture();assert.equal((await f.call('/api/collection')).status,200);assert.equal((await f.call('/api/session')).status,401);assert.equal((await f.call('/api/psn')).status,401);assert.equal((await f.call('/api/items','POST',item)).status,401);assert.equal((await f.call('/api/internal/psn')).status,401);assert.equal(await (await f.call('/admin')).response.text(),'asset:/admin.html');assert.equal(await (await f.call('/')).response.text(),'asset:/index.html');});
 test('cookie login, CRUD, concurrent version conflict, server logout',async()=>{const f=await fixture();const login=await f.login();assert.match(login.response.headers.get('Set-Cookie'),/Secure/);assert.match(login.response.headers.get('Set-Cookie'),/HttpOnly/);const created=await f.call('/api/items','POST',item);assert.equal(created.status,201);assert.equal(created.json.item.rating,'8.5/10');const id=created.json.item.id;assert.equal((await f.call('/api/collection')).json.items.length,1);assert.equal((await f.call('/api/items/'+id,'PUT',{...item,rating:'9',version:1})).status,200);assert.equal((await f.call('/api/items/'+id,'PUT',{...item,version:1})).status,409);assert.equal((await f.call('/api/items/'+id,'DELETE',{version:1})).status,409);assert.equal((await f.call('/api/items/'+id,'DELETE',{version:2})).status,200);await f.call('/api/logout','POST',{});assert.equal((await f.call('/api/session')).status,401);});
@@ -63,4 +86,39 @@ test('review and comment persist separately, editing does not change insertion o
  assert.deepEqual(rows.map(i=>i.id),[first.json.item.id,second.json.item.id]);
  assert.equal(rows[0].review,'Новая рецензия');
  assert.throws(()=>validate({...item,review:'x'.repeat(30001)}));
+});
+
+test('native Sony pagination, credential isolation, and data validation',async()=>{
+ const mock=sonyMock();const stats=await fetchStats('n'.repeat(64),mock.fetcher);
+ assert.equal(stats.length,21);assert.equal(stats[20].title,'Native game 20');assert.equal(stats[0].hours,2.5);assert.equal(stats[0].date,'06.10.2026');assert.equal(mock.calls.length,4);
+ for(const bad of [{playDuration:'invalid'},{lastPlayedDateTime:'invalid'},{imageUrl:'javascript:alert(1)'},{name:''}])assert.throws(()=>titleStat({name:'Game',...bad}));
+ await assert.rejects(fetchStats('n'.repeat(64),sonyMock({expire:true}).fetcher),/Токен PlayStation истёк/);
+ await assert.rejects(fetchStats('n'.repeat(64),sonyMock({brokenPage:true}).fetcher),error=>!error.message.includes('private upstream body'));
+});
+test('owner one-click native sync, protected runner, Free D1 budgets and scheduled skip',async()=>{
+ const f=await fixture();const queries=nativeBindings(f);const originalFetch=globalThis.fetch;const mock=sonyMock();globalThis.fetch=mock.fetcher;
+ try{
+  assert.equal((await psnWorker.fetch(new Request('https://psn.internal/sync',{method:'POST',body:'{}'}),f.env)).status,401);
+  assert.equal((await f.call('/api/psn/sync','POST',{})).status,401);await f.login();
+  const game={id:'g1',title:'Native game 0',category:'games',status:'completed',rating:'9/10',platform:'PC + PS5',hours:'20 ч.',date:'01.10.2026',comment:'Мой комментарий',review:'Моя рецензия',image:'https://example.com/mine.jpg'};
+  await f.env.DB.prepare('INSERT INTO items VALUES (?,?,1)').bind(game.id,JSON.stringify(game)).run();await f.env.DB.prepare('INSERT INTO psn_baseline VALUES (?,?)').bind(game.title,1).run();
+  assert.equal((await f.call('/api/psn')).json.ready,true);
+  const result=await f.call('/api/psn/sync','POST',{});assert.equal(result.status,200,JSON.stringify(result.json));assert.equal(result.json.added,20);
+  const rows=(await f.call('/api/collection')).json.items;assert.equal(rows.length,21);const updated=rows.find(g=>g.id==='g1');
+  assert.equal(updated.hours,'21.5 ч.');for(const key of ['rating','comment','review','image','status','platform'])assert.equal(updated[key],game[key]);
+  assert.ok(queries.every(n=>n<50),JSON.stringify(queries));
+  const state=(await f.call('/api/psn')).json;assert.equal(state.running,false);assert.equal(Math.round((Date.parse(state.next_run)-Date.parse(state.last_success))/86400000),7);
+  assert.ok(!JSON.stringify(state).includes('n'.repeat(64)));assert.ok(!JSON.stringify(result.json).includes('temporary-access-token'));
+  const callCount=mock.calls.length;await psnWorker.scheduled({},f.env);assert.equal(mock.calls.length,callCount);
+  assert.equal((await f.call('/api/psn/sync','POST',{})).status,200);assert.deepEqual((await f.call('/api/collection')).json.items,rows);
+  f.env.DB.db.prepare("UPDATE settings SET value='1' WHERE key='psn_requested'").run();const beforeScheduled=mock.calls.length;await psnWorker.scheduled({},f.env);assert.ok(mock.calls.length>beforeScheduled);
+ }finally{globalThis.fetch=originalFetch;}
+});
+test('failed Sony pagination leaves collection unchanged, unlocks job and reports safe error',async()=>{
+ const f=await fixture();nativeBindings(f);await f.login();const originalFetch=globalThis.fetch;globalThis.fetch=sonyMock({brokenPage:true}).fetcher;
+ try{
+  const result=await f.call('/api/psn/sync','POST',{});assert.equal(result.status,502);assert.equal((await f.call('/api/collection')).json.items.length,0);
+  const state=(await f.call('/api/psn')).json;assert.equal(state.running,false);assert.equal(state.last_success,'');assert.match(state.error,/Sony/);assert.ok(!JSON.stringify(state).includes('private upstream body'));
+  globalThis.fetch=sonyMock({expire:true}).fetcher;assert.equal((await f.call('/api/psn/sync','POST',{})).status,502);assert.match((await f.call('/api/psn')).json.error,/Токен PlayStation истёк/);
+ }finally{globalThis.fetch=originalFetch;}
 });
